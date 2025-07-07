@@ -31,7 +31,7 @@ export class MetricsService {
     // ИСПРАВЛЕНО: Удален последний слэш для лучшей совместимости.
     // Этот URL будет относительным, что может вызвать проблемы.
     // Рекомендуется использовать прокси или интерцептор для добавления базового URL API.
-    private readonly apiUrl = 'metrics/upload-processed/';
+    private readonly apiUrl = 'api/metrics/upload-processed/';
 
     constructor(private http: HttpClient) { }
 
