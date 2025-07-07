@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 /**
  * AppRoutingModule – центральный роутер приложения.
@@ -16,7 +17,8 @@ const routes: Routes = [
   {
     path: 'dashboard',
     // This is how you lazy-load a feature module
-    loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
+    loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule),
+    canActivate: [authGuard]
   },
    {
     path: '**',
