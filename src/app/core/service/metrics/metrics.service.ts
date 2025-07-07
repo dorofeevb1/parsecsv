@@ -2,38 +2,31 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError, delay, tap, catchError } from 'rxjs';
 
-// Define the type for the payload received by the service.
 export type CsvDataPayload = {
   [filename: string]: any[];
 };
-
-/*
-// --- OLD DATA MODELS ---
-// These interfaces did not match the data being sent by the component.
-// They expected pre-calculated metrics, but the component sends raw JSON data.
-// They are commented out to avoid confusion.
-
-export interface FileMetric {
-  totalViews: number;
-}
-export interface AllMetrics {
-  [filename: string]: FileMetric;
-}
-*/
 
 @Injectable({
   providedIn: 'root'
 })
 export class MetricsService {
 
-  private static readonly SIMULATE_ERROR = false;
+  // --- SERVICE CONFIGURATION ---
+
+  // 1. A single, clear switch to control behavior.
+  // Set to `true` for development without a backend.
+  // Set to `false` to make real HTTP calls.
+  private static readonly USE_SIMULATION = true; 
+  
+  private static readonly SIMULATE_ERROR = false; // Only used if USE_SIMULATION is true
   private static readonly SIMULATION_DELAY = 1200;
-  private readonly apiUrl = '/api/data'; // Changed URL to be more generic
+  
+  // CORRECTED: Removed trailing slash for better consistency.
+  private readonly apiUrl = 'metrics/upload-processed/'; 
 
   constructor(private http: HttpClient) { }
 
   /**
-   * CORRECTED: Renamed method from 'sendMetrics' to 'sendData' and updated payload type.
    * Sends the parsed JSON data from multiple CSV files to the backend.
    * @param payload An object where keys are filenames and values are arrays of JSON objects.
    * @returns Observable that notifies of the operation result.
@@ -41,15 +34,33 @@ export class MetricsService {
   sendData(payload: CsvDataPayload): Observable<any> {
     console.log('%c[MetricsService] Отправка данных на бэкенд...', 'color: blue; font-weight: bold;', payload);
 
-    // ----- SIMULATION BLOCK -----
-    if (MetricsService.SIMULATE_ERROR) {
-      return throwError(() => new Error('Сервер недоступен (503 Service Unavailable)'))
-        .pipe(
-          delay(MetricsService.SIMULATION_DELAY)
-        );
+    // --- LOGIC SWITCH ---
+    // This structure ensures only one path (simulation or real call) is ever taken.
+    if (MetricsService.USE_SIMULATION) {
+      // 2. The entire simulation block is now self-contained.
+      return this.simulateRequest(payload);
     } else {
-      const mockResponse = { success: true, message: 'Данные успешно сохранены на сервере', dataReceived: payload };
-      
+      // 3. The real HTTP call is now correctly placed in the 'else' block and is reachable.
+      return this.http.post<any>(this.apiUrl, payload).pipe(
+        tap(response => console.log('Успешный ответ от сервера:', response)),
+        catchError(this.handleError)
+      );
+    }
+  }
+
+  /**
+   * Helper method for simulating server responses. Keeps the main method clean.
+   */
+  private simulateRequest(payload: CsvDataPayload): Observable<any> {
+    console.log('%c[MetricsService] РЕЖИМ ИМИТАЦИИ АКТИВЕН', 'color: orange; font-weight: bold;');
+    
+    if (MetricsService.SIMULATE_ERROR) {
+      // Simulate a server error
+      return throwError(() => new Error('Сервер недоступен (503 Service Unavailable)'))
+        .pipe(delay(MetricsService.SIMULATION_DELAY));
+    } else {
+      // Simulate a successful response
+      const mockResponse = { success: true, message: 'Данные успешно сохранены (имитация)', dataReceived: payload };
       return of(mockResponse).pipe(
         delay(MetricsService.SIMULATION_DELAY),
         tap(response => {
@@ -57,23 +68,20 @@ export class MetricsService {
         })
       );
     }
-
-    /*
-      // ----- REAL HTTP CALL (for production) -----
-      return this.http.post<any>(this.apiUrl, payload).pipe(
-        tap(response => console.log('Успешный ответ от сервера:', response)),
-        catchError(this.handleError)
-      );
-    */
   }
 
-  private handleError(error: HttpErrorResponse) {
+  /**
+   * Handles HTTP errors from the backend.
+   */
+  private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'Произошла неизвестная ошибка!';
     
     if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred.
       errorMessage = `Ошибка на клиенте: ${error.error.message}`;
     } else {
-      errorMessage = `Код ошибки от сервера: ${error.status}\nСообщение: ${error.message}`;
+      // The backend returned an unsuccessful response code.
+      errorMessage = `Код ошибки от сервера: ${error.status}. Сообщение: ${error.message}`;
     }
     
     console.error(errorMessage);

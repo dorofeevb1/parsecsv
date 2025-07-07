@@ -55,7 +55,7 @@ export class AuthService {
 
   // Вход в систему
   login(email: string, password: string): Observable<User> {
-    return this.api.post<LoginResponse>('auth/login', { email, password }).pipe(
+    return this.api.post<LoginResponse>('auth/login/', { email, password }).pipe(
       tap(response => {
         this.setToken(response.token);
         this.setCurrentUser(response.user);
@@ -87,7 +87,7 @@ register(userData: {
     return throwError(() => new Error('Password must be at least 6 characters long'));
   }
 
-  return this.api.post<LoginResponse>('auth/register', {
+  return this.api.post<LoginResponse>('auth/register/', {
 
     email: userData.email.toLowerCase().trim(),
     password: userData.password
@@ -145,7 +145,7 @@ register(userData: {
 
   // Обновление токена
   refreshToken(): Observable<{ token: string }> {
-    return this.api.post<{ token: string }>('auth/refresh', {}).pipe(
+    return this.api.post<{ token: string }>('auth/refresh/', {}).pipe(
       tap(response => {
         this.setToken(response.token);
       })
