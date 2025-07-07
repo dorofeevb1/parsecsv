@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { MetricsService } from 'src/app/core/service/metrics/metrics.service';
-
+import { Router } from '@angular/router';
 // Define the type for the payload being sent to the service.
 // It's a dictionary where keys are filenames and values are the parsed JSON arrays.
 type AllFilesPayload = { [filename: string]: any[] };
@@ -13,7 +13,7 @@ type AllFilesPayload = { [filename: string]: any[] };
 })
 export class MultiCsvDownloaderComponent {
   private metricsService = inject(MetricsService);
-
+  private router = inject(Router);
   readonly MAX_FILES = 3;
   selectedFiles: File[] = [];
   isLoading = false;
@@ -27,7 +27,7 @@ export class MultiCsvDownloaderComponent {
     this.isError = false;
     this.statusMessage = '';
     const newFiles = Array.from(input.files);
-    
+
     if (this.selectedFiles.length + newFiles.length > this.MAX_FILES) {
       this.isError = true;
       this.statusMessage = `Ошибка: можно выбрать не более ${this.MAX_FILES} файлов.`;
@@ -59,19 +59,22 @@ export class MultiCsvDownloaderComponent {
       for (let i = 0; i < this.selectedFiles.length; i++) {
         const file = this.selectedFiles[i];
         const content = fileContents[i];
-        
+
         console.log(`Парсинг файла: ${file.name}`);
         const jsonData = this.parseCsvToJson(content);
         jsonDataPayload[file.name] = jsonData;
       }
       console.log('Итоговый JSON для отправки:', jsonDataPayload);
-      
+
       this.statusMessage = '2/2: Отправка данных на сервер...';
       // CORRECTED: The method is named `sendData` in the updated service.
-      await firstValueFrom(this.metricsService.sendData(jsonDataPayload));
+      const response = await firstValueFrom(this.metricsService.sendData(jsonDataPayload));
 
       this.statusMessage = 'Готово! Данные успешно отправлены.';
       this.selectedFiles = [];
+       setTimeout(() => {
+        this.router.navigate(['/dashboard/statistic']);
+      }, 1000);
     } catch (error) {
       this.isError = true;
       this.statusMessage = `Ошибка: ${error instanceof Error ? error.message : 'Не удалось завершить операцию.'}`;
@@ -80,7 +83,7 @@ export class MultiCsvDownloaderComponent {
       this.isLoading = false;
     }
   }
-  
+
   private readFileAsText(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -89,7 +92,7 @@ export class MultiCsvDownloaderComponent {
       reader.readAsText(file, 'UTF-8');
     });
   }
-  
+
   /**
    * CORRECTED: A more robust CSV parser that handles commas within quoted fields
    * and escaped quotes ("").
@@ -128,7 +131,7 @@ export class MultiCsvDownloaderComponent {
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
       if (!line) continue;
-      
+
       const cells = splitCsvLine(line);
       if (cells.length !== headers.length) {
         console.warn(`Skipping malformed CSV line ${i + 1}: column count mismatch.`);
@@ -139,13 +142,13 @@ export class MultiCsvDownloaderComponent {
       for (let j = 0; j < headers.length; j++) {
         const header = headers[j];
         const value = (cells[j] || '').trim().replace(/^"|"$/g, '');
-        
+
         const numericValue = parseFloat(value.replace(',', '.'));
-        
+
         if (!isNaN(numericValue) && isFinite(numericValue) && value.trim() !== '') {
-            rowObject[header] = numericValue;
+          rowObject[header] = numericValue;
         } else {
-            rowObject[header] = value;
+          rowObject[header] = value;
         }
       }
       jsonData.push(rowObject);
