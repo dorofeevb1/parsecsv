@@ -1,20 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core'; // 1. Import Injector
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from '../service/auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  // Define your API's base URL here for the check
-  private readonly apiUrl = 'http://localhost:8000/api'; // Example API URL
-
-  constructor(private authService: AuthService) {}
+  // We cannot inject AuthService directly in the constructor due to a circular dependency.
+  // Instead, we inject the Injector.
+  constructor(private injector: Injector) {} // 2. Inject the Injector
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const authToken = this.authService.getToken();
+    // 3. Get the AuthService instance manually from the injector *inside* the method.
+    // This breaks the circular dependency chain at compile time.
+    const authService = this.injector.get(AuthService);
     
-    // Check if the token exists AND the request is going to your API
-    if (authToken && request.url.startsWith(this.apiUrl)) {
+    const authToken = authService.getToken();
+    const apiUrl = 'http://localhost:8000/api'; // It's better to get this from environment files.
+    
+    if (authToken && request.url.startsWith(apiUrl)) {
       const authReq = request.clone({
         setHeaders: {
           Authorization: `Bearer ${authToken}`
@@ -23,7 +26,6 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(authReq);
     }
     
-    // For all other cases (no token, or request to a different domain), pass the request as-is
     return next.handle(request);
   }
 }
