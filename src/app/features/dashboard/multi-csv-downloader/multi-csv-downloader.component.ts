@@ -15,10 +15,13 @@ export class MultiCsvDownloaderComponent {
   private metricsService = inject(MetricsService);
   private router = inject(Router);
   readonly MAX_FILES = 3;
+  readonly platforms = ['YouTube', 'VK', 'TikTok'];
+  selectedPlatform: string = '';
   selectedFiles: File[] = [];
   isLoading = false;
   statusMessage = '';
   isError = false;
+
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -44,13 +47,16 @@ export class MultiCsvDownloaderComponent {
   }
 
   async processAndSendData(): Promise<void> {
-    if (this.selectedFiles.length === 0) return;
+    if (this.selectedFiles.length === 0 || !this.selectedPlatform) {
+      this.isError = true;
+      this.statusMessage = 'Ошибка: Пожалуйста, выберите платформу и файлы для анализа.';
+      return;
+    }
 
     this.isLoading = true;
     this.isError = false;
     this.statusMessage = 'Начинаем обработку файлов...';
     const jsonDataPayload: AllFilesPayload = {};
-
     try {
       this.statusMessage = '1/2: Чтение и преобразование файлов в JSON...';
       const readPromises = this.selectedFiles.map(file => this.readFileAsText(file));
@@ -64,15 +70,17 @@ export class MultiCsvDownloaderComponent {
         const jsonData = this.parseCsvToJson(content);
         jsonDataPayload[file.name] = jsonData;
       }
-      console.log('Итоговый JSON для отправки:', jsonDataPayload);
+
+      console.log(`Итоговый JSON для платформы "${this.selectedPlatform}":`, jsonDataPayload);
 
       this.statusMessage = '2/2: Отправка данных на сервер...';
-      // CORRECTED: The method is named `sendData` in the updated service.
-      const response = await firstValueFrom(this.metricsService.sendData(jsonDataPayload));
+      // Передаем платформу в сервис
+      const response = await firstValueFrom(this.metricsService.sendData(jsonDataPayload, this.selectedPlatform));
 
       this.statusMessage = 'Готово! Данные успешно отправлены.';
       this.selectedFiles = [];
-       setTimeout(() => {
+      this.selectedPlatform = ''; // Сбрасываем селектор
+      setTimeout(() => {
         this.router.navigate(['/dashboard/statistic']);
       }, 1000);
     } catch (error) {

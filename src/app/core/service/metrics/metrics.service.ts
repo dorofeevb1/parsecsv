@@ -41,48 +41,50 @@ export class MetricsService {
      * @param payload Объект, где ключи - это имена файлов, а значения - массивы JSON-объектов.
      * @returns Observable, который уведомит о результате операции.
      */
-    sendData(payload: CsvDataPayload): Observable<any> {
-        console.log('%c[MetricsService] Отправка данных на бэкенд...', 'color: blue; font-weight: bold;', payload);
+    sendData(payload: CsvDataPayload, platform: string): Observable<any> {
+        // Создаем новый объект для отправки, который включает и платформу, и файлы.
+        const requestBody = {
+            platform: platform,
+            files: payload
+        };
+        
+        console.log('%c[MetricsService] Отправка данных на бэкенд...', 'color: blue; font-weight: bold;', requestBody);
+        
+        // В BehaviorSubject по-прежнему отправляем только данные файлов,
+        // так как компонент статистики не зависит от платформы.
         this.processedDataSource.next(payload);
-        // --- ЛОГИЧЕСКИЙ ПЕРЕКЛЮЧАТЕЛЬ ---
-        // Эта структура гарантирует, что будет выбран только один путь:
-        // либо имитация, либо реальный запрос.
-
+        
         if (MetricsService.USE_SIMULATION) {
-            // 2. Весь блок имитации теперь находится в отдельном методе.
-            return this.simulateRequest(payload);
+            return this.simulateRequest(requestBody);
         } else {
-            // 3. Реальный HTTP-запрос теперь находится в блоке 'else' и является достижимым.
-             return this.api.post<any>(this.apiUrl, payload).pipe(
+             // Отправляем новый requestBody
+             return this.api.post<any>(this.apiUrl, requestBody).pipe(
                 tap(response => console.log('Успешный ответ от сервера:', response)),
                 catchError(this.handleError)
             );
         }
     }
 
+
+
     /**
      * Вспомогательный метод для имитации ответов от сервера.
      * Помогает сохранить основной метод чистым и читаемым.
      */
-    private simulateRequest(payload: CsvDataPayload): Observable<any> {
+    private simulateRequest(requestBody: any): Observable<any> {
         console.log('%c[MetricsService] РЕЖИМ ИМИТАЦИИ АКТИВЕН', 'color: orange; font-weight: bold;');
 
         if (MetricsService.SIMULATE_ERROR) {
-            // Имитация ошибки сервера
             return throwError(() => new Error('Сервер недоступен (503 Service Unavailable)'))
-                .pipe(delay(MetricsService.SIMULATION_DELAY));
+                .pipe(delay(1200));
         } else {
-            // Имитация успешного ответа
-            const mockResponse = { success: true, message: 'Данные успешно сохранены (имитация)', dataReceived: payload };
+            const mockResponse = { success: true, message: 'Данные успешно сохранены (имитация)', dataReceived: requestBody };
             return of(mockResponse).pipe(
-                delay(MetricsService.SIMULATION_DELAY),
-                tap(response => {
-                    console.log('%c[MetricsService] Получен ответ от сервера (имитация):', 'color: green;', response);
-                })
+                delay(1200),
+                tap(response => console.log('%c[MetricsService] Получен ответ от сервера (имитация):', 'color: green;', response))
             );
         }
     }
-
     /**
      * Обрабатывает ошибки HTTP-запросов от бэкенда.
      */

@@ -1,8 +1,18 @@
-      
 <div class="uploader-container">
   <h2>Загрузка и анализ CSV отчетов</h2>
-  <p>Выберите до {{ MAX_FILES }} файлов в формате CSV для преобразования в JSON и отправки на сервер.</p>
+  <p>Выберите платформу и до {{ MAX_FILES }} файлов для анализа.</p>
 
+  <!-- Блок выбора платформы -->
+  <mat-form-field appearance="fill" class="platform-selector">
+    <mat-label>1. Выберите платформу</mat-label>
+    <mat-select [(ngModel)]="selectedPlatform" required>
+      <mat-option *ngFor="let platform of platforms" [value]="platform">
+        {{ platform }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Блок выбора файлов -->
   <label class="file-input-label" [class.disabled]="selectedFiles.length >= MAX_FILES || isLoading">
     <input 
       type="file" 
@@ -11,7 +21,7 @@
       (change)="onFileSelected($event)"
       [disabled]="selectedFiles.length >= MAX_FILES || isLoading"
       class="file-input">
-    Выбрать файлы...
+    2. Выбрать файлы...
   </label>
   <div class="hint" *ngIf="selectedFiles.length < MAX_FILES && !isLoading">
     Осталось: {{ MAX_FILES - selectedFiles.length }}
@@ -31,7 +41,7 @@
     <button
       class="process-button"
       (click)="processAndSendData()"
-      [disabled]="selectedFiles.length === 0 || isLoading">
+      [disabled]="selectedFiles.length === 0 || isLoading || !selectedPlatform">
       <span *ngIf="!isLoading">Обработать и отправить данные</span>
       <span *ngIf="isLoading" class="spinner"></span>
     </button>
@@ -45,5 +55,3 @@
     {{ statusMessage }}
   </div>
 </div>
-
-    

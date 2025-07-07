@@ -12,6 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 
 // Для MatDatepicker (требует дополнительных провайдеров)
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -31,7 +32,8 @@ const MATERIAL_MODULES = [
     MatProgressSpinnerModule,
     MatDatepickerModule,
     RouterModule,
-    MatNativeDateModule // Required for MatDatepicker
+    MatNativeDateModule, // Required for MatDatepicker
+    MatSelectModule
 ];
 
 @NgModule({

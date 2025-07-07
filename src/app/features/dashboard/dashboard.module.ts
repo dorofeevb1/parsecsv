@@ -5,7 +5,9 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MultiCsvDownloaderComponent } from './multi-csv-downloader/multi-csv-downloader.component';
 import { StatisticComponent } from './statistic/statistic.component';
 import { ReportsComponent } from './reports/reports.component';
-import { NgApexchartsModule } from "ng-apexcharts"; 
+import { NgApexchartsModule } from "ng-apexcharts";
+import { FormsModule } from '@angular/forms';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -15,8 +17,10 @@ import { NgApexchartsModule } from "ng-apexcharts";
     ],
     imports: [
         CommonModule,
+        FormsModule,
         DashboardRoutingModule,
-        NgApexchartsModule
+        NgApexchartsModule,
+        SharedModule
     ]
 })
 export class DashboardModule { }
