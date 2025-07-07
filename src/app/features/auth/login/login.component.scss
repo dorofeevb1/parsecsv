@@ -1,0 +1,31 @@
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+mat-card {
+  width: 360px;
+  padding: 1.5rem;
+  @extend mat-card;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+input.mat-input-element {
+  color: #fff;
+}
+
+.mat-form-field-appearance-fill .mat-form-field-flex {
+  background: rgba(255,255,255,0.08);
+}

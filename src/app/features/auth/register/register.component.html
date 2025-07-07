@@ -1,0 +1,32 @@
+<div class="auth-wrapper">
+  <mat-card>
+    <h2>Регистрация</h2>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+        <mat-error *ngIf="email?.hasError('required')">Введите email</mat-error>
+        <mat-error *ngIf="email?.hasError('email')">Неверный формат email</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Пароль</mat-label>
+        <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="password?.hasError('required')">Введите пароль</mat-error>
+        <mat-error *ngIf="password?.hasError('minlength')">Минимум 6 символов</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Подтвердите пароль</mat-label>
+        <input matInput type="password" formControlName="confirm" />
+        <mat-error *ngIf="confirm?.hasError('required')">Подтвердите пароль</mat-error>
+        <mat-error *ngIf="form.errors?.['mismatch'] && confirm?.touched">Пароли не совпадают</mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading">Создать аккаунт</button>
+      <div class="actions">
+        <a routerLink="/auth/login">Уже есть аккаунт?</a>
+      </div>
+    </form>
+  </mat-card>
+</div>
