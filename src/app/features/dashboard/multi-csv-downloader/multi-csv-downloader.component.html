@@ -1,0 +1,49 @@
+      
+<div class="uploader-container">
+  <h2>Загрузка и анализ CSV отчетов</h2>
+  <p>Выберите до {{ MAX_FILES }} файлов в формате CSV для преобразования в JSON и отправки на сервер.</p>
+
+  <label class="file-input-label" [class.disabled]="selectedFiles.length >= MAX_FILES || isLoading">
+    <input 
+      type="file" 
+      multiple 
+      accept=".csv, text/csv" 
+      (change)="onFileSelected($event)"
+      [disabled]="selectedFiles.length >= MAX_FILES || isLoading"
+      class="file-input">
+    Выбрать файлы...
+  </label>
+  <div class="hint" *ngIf="selectedFiles.length < MAX_FILES && !isLoading">
+    Осталось: {{ MAX_FILES - selectedFiles.length }}
+  </div>
+
+  <div class="file-list-container" *ngIf="selectedFiles.length > 0">
+    <h4>Выбранные файлы:</h4>
+    <ul class="file-list">
+      <li *ngFor="let file of selectedFiles">
+        <span>{{ file.name }} ({{ (file.size / 1024).toFixed(1) }} KB)</span>
+        <button class="remove-btn" (click)="removeFile(file)" [disabled]="isLoading" title="Удалить файл">×</button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="button-wrapper">
+    <button
+      class="process-button"
+      (click)="processAndSendData()"
+      [disabled]="selectedFiles.length === 0 || isLoading">
+      <span *ngIf="!isLoading">Обработать и отправить данные</span>
+      <span *ngIf="isLoading" class="spinner"></span>
+    </button>
+  </div>
+  
+  <div *ngIf="statusMessage" class="status-box" [ngClass]="{
+    'status-box--error': isError,
+    'status-box--success': !isError && !isLoading && statusMessage.includes('Готово'),
+    'status-box--in-progress': isLoading
+  }">
+    {{ statusMessage }}
+  </div>
+</div>
+
+    

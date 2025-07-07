@@ -1,0 +1,35 @@
+<header class="app-header">
+  <nav class="navbar">
+    <!-- Логотип, всегда ведет на главную страницу (дашборд) -->
+    <a routerLink="/dashboard" class="logo" (click)="closeMenu()">DataAnalyzer</a>
+
+    <ul class="nav-links" [ngClass]="{ 'menu-open': isMenuOpen }">
+      <li>
+        <!-- ИСАПРВЛЕНО: Эта ссылка теперь явно называется "Дашборд" и ведет на него -->
+        <a routerLink="/dashboard/statistic" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="closeMenu()">Дашборд</a>
+      </li>
+      <li>
+        <!-- ПРЕДПОЛОЖЕНИЕ: У вас будет страница для отчетов. Если нет, удалите этот пункт -->
+        <a routerLink="/dashboard/reports" routerLinkActive="active-link" (click)="closeMenu()">Отчеты</a>
+      </li>
+      <li>
+        <!-- ИСПРАВЛЕНО: Ссылка на страницу входа должна вести на /auth -->
+        <!-- Текст также изменен на "Войти". Кнопка "Выйти" появится, когда пользователь войдет в систему -->
+        <a routerLink="/dashboard/csv" routerLinkActive="active-link" (click)="closeMenu()">csv</a>
+      </li>
+      <li>
+        <button class="logout-btn mobile-only" (click)="logout()">Выйти</button>
+      </li>
+    </ul>
+
+    <button class="logout-btn desktop-only" (click)="logout()">
+      Выйти
+    </button>
+
+    <button class="hamburger-menu" (click)="toggleMenu()" [class.open]="isMenuOpen" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+</header>

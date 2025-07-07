@@ -4,11 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule, Routes } from '@angular/router';
-
-/**
- * AuthModule – lazy-модуль `/auth`.
- * Содержит компоненты Login и Register + Angular Material формы.
- */
+import { SharedModule } from 'src/app/shared/shared.module';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -18,6 +14,6 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule.forChild(routes)]
+  imports: [CommonModule, SharedModule, ReactiveFormsModule, FormsModule, RouterModule.forChild(routes)]
 })
 export class AuthModule {} 

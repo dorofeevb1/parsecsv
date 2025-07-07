@@ -8,12 +8,21 @@ import { RouterModule, Routes } from '@angular/router';
  * Все неизвестные пути перенаправляются на /dashboard.
  */
 const routes: Routes = [
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   {
     path: 'auth',
     loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule)
   },
- 
+  {
+    path: 'dashboard',
+    // This is how you lazy-load a feature module
+    loadChildren: () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
+  },
+   {
+    path: '**',
+    redirectTo: '/dashboard',
+    pathMatch: 'full'
+  },
 ];
 
 @NgModule({

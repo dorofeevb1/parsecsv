@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from 'src/app/core/service/auth/auth.service';
 
 /**
  * LoginComponent – форма входа.
@@ -22,7 +23,7 @@ export class LoginComponent {
     password: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {}
 
   get email() {
     return this.form.get('email');
@@ -38,5 +39,14 @@ export class LoginComponent {
     }
     const { email, password } = this.form.value as { email: string; password: string };
     this.loading = true;
+     this.authService.login(email, password).subscribe({
+      next: (user) => {
+        console.log('Logged in as', user.name);
+        // Перенаправление на защищенную страницу
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+      }
+    });
   }
 }
