@@ -16,7 +16,7 @@ export class MetricsService {
   // 1. A single, clear switch to control behavior.
   // Set to `true` for development without a backend.
   // Set to `false` to make real HTTP calls.
-  private static readonly USE_SIMULATION = true; 
+  private static readonly USE_SIMULATION = false; 
   
   private static readonly SIMULATE_ERROR = false; // Only used if USE_SIMULATION is true
   private static readonly SIMULATION_DELAY = 1200;
