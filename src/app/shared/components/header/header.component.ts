@@ -2,12 +2,8 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from 'src/app/core/service/auth/auth.service';
 
-export interface User {
-  id: number;
-  email: string;
-  name: string;
-  role: string;
-}
+
+import { User } from 'src/app/core/service/auth/auth.service';
 
 @Component({
   selector: 'app-header',

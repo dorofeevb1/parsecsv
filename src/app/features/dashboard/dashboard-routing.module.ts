@@ -15,6 +15,7 @@ import { ReportsComponent } from './reports/reports.component';
  * - A path of 'settings' here will map to '/dashboard/settings'.
  */
 const routes: Routes = [
+    { path: '', redirectTo: 'csv', pathMatch: 'full' },
     {
         path: 'csv',
         component: MultiCsvDownloaderComponent,

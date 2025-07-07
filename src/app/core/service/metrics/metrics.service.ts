@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError, delay, tap, catchError, BehaviorSubject } from 'rxjs';
+import { ApiService } from '../api/api.service';
 
 // Определяем тип для данных, которые будут отправлены в сервис.
 // Это объект, где ключ - имя файла, а значение - массив распарсенных JSON-объектов.
@@ -33,7 +34,7 @@ export class MetricsService {
     // Рекомендуется использовать прокси или интерцептор для добавления базового URL API.
     private readonly apiUrl = 'api/metrics/upload-processed/';
 
-    constructor(private http: HttpClient) { }
+    constructor(private api: ApiService) { }
 
     /**
      * Отправляет распарсенные JSON-данные из нескольких CSV-файлов на бэкенд.
@@ -52,7 +53,7 @@ export class MetricsService {
             return this.simulateRequest(payload);
         } else {
             // 3. Реальный HTTP-запрос теперь находится в блоке 'else' и является достижимым.
-            return this.http.post<any>(this.apiUrl, payload).pipe(
+             return this.api.post<any>(this.apiUrl, payload).pipe(
                 tap(response => console.log('Успешный ответ от сервера:', response)),
                 catchError(this.handleError)
             );

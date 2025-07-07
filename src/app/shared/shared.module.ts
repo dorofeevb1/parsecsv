@@ -48,7 +48,6 @@ const MATERIAL_MODULES = [
         ...MATERIAL_MODULES
     ],
     providers: [
-        MatDatepickerModule // Провайдер для MatDatepicker
     ]
 })
 export class SharedModule { }
