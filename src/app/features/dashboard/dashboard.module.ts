@@ -5,6 +5,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MultiCsvDownloaderComponent } from './multi-csv-downloader/multi-csv-downloader.component';
 import { StatisticComponent } from './statistic/statistic.component';
 import { ReportsComponent } from './reports/reports.component';
+import { NgApexchartsModule } from "ng-apexcharts"; 
 
 @NgModule({
     declarations: [
@@ -14,7 +15,8 @@ import { ReportsComponent } from './reports/reports.component';
     ],
     imports: [
         CommonModule,
-        DashboardRoutingModule
+        DashboardRoutingModule,
+        NgApexchartsModule
     ]
 })
 export class DashboardModule { }

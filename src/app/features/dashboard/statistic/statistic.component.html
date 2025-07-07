@@ -1,35 +1,50 @@
+// File: pars/src/app/features/dashboard/statistic/statistic.component.html
 <ng-container *ngIf="statisticsData$ | async as statisticsData; else noStatistics">
 
   <div class="statistics-container">
-    <h1>Статистика по загруженным файлам</h1>
+    <h1>Визуальная статистика</h1>
     
-    <div *ngFor="let file of statisticsData | keyvalue: originalOrder" class="file-block">
-      <h2>{{ file.key }}</h2>
-      <div class="table-wrapper" *ngIf="file.value.length > 0; else noData">
-        <table>
-          <thead>
-            <tr>
-              <!-- Передаем statisticsData в getHeaders -->
-              <th *ngFor="let header of getHeaders(file.key, statisticsData)">{{ header }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let row of file.value">
-              <!-- Передаем statisticsData в getHeaders -->
-              <td *ngFor="let header of getHeaders(file.key, statisticsData)">{{ row[header] }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <ng-template #noData>
-        <p class="no-data-message">В этом файле нет данных для отображения.</p>
-      </ng-template>
+    <div class="charts-grid">
+      <!-- CORRECTED: Added `!` to all optional property bindings -->
+      <div class="chart-card" *ngIf="barChartOptions"><apx-chart [series]="barChartOptions.series" [chart]="barChartOptions.chart" [xaxis]="barChartOptions.xaxis!" [title]="barChartOptions.title" [subtitle]="barChartOptions.subtitle!"></apx-chart></div>
+      <div class="chart-card" *ngIf="pieChartOptions"><apx-chart [series]="pieChartOptions.series" [chart]="pieChartOptions.chart" [labels]="pieChartOptions.labels" [responsive]="pieChartOptions.responsive!" [title]="pieChartOptions.title" [subtitle]="pieChartOptions.subtitle!"></apx-chart></div>
+      <div class="chart-card" *ngIf="lineChartOptions"><apx-chart [series]="lineChartOptions.series" [chart]="lineChartOptions.chart" [xaxis]="lineChartOptions.xaxis!" [stroke]="lineChartOptions.stroke!" [title]="lineChartOptions.title" [subtitle]="lineChartOptions.subtitle!"></apx-chart></div>
+      <div class="chart-card" *ngIf="scatterChartOptions"><apx-chart [series]="scatterChartOptions.series" [chart]="scatterChartOptions.chart" [xaxis]="scatterChartOptions.xaxis!" [yaxis]="scatterChartOptions.yaxis!" [title]="scatterChartOptions.title" [subtitle]="scatterChartOptions.subtitle!"></apx-chart></div>
+      <div class="chart-card" *ngIf="bubbleChartOptions"><apx-chart [series]="bubbleChartOptions.series" [chart]="bubbleChartOptions.chart" [xaxis]="bubbleChartOptions.xaxis!" [yaxis]="bubbleChartOptions.yaxis!" [fill]="bubbleChartOptions.fill!" [title]="bubbleChartOptions.title" [subtitle]="bubbleChartOptions.subtitle!"></apx-chart></div>
+      <div class="chart-card" *ngIf="mixedChartOptions"><apx-chart [series]="mixedChartOptions.series" [chart]="mixedChartOptions.chart" [xaxis]="mixedChartOptions.xaxis!" [yaxis]="mixedChartOptions.yaxis!" [stroke]="mixedChartOptions.stroke!" [title]="mixedChartOptions.title" [subtitle]="mixedChartOptions.subtitle!"></apx-chart></div>
+    </div>
+
+    <!-- Разделитель перед таблицами -->
+    <hr class="section-divider">
+
+    <!-- Отображение таблиц, как и раньше -->
+    <div class="tables-section" *ngIf="statisticsData">
+        <h1>Детальная статистика по файлам</h1>
+        <div *ngFor="let file of statisticsData | keyvalue: originalOrder" class="file-block">
+            <h2>{{ file.key }}</h2>
+            <div class="table-wrapper" *ngIf="file.value.length > 0; else noData">
+                <table>
+                    <thead>
+                        <tr>
+                            <th *ngFor="let header of getHeaders(file.key, statisticsData)">{{ header }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of file.value">
+                            <td *ngFor="let header of getHeaders(file.key, statisticsData)">{{ row[header] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ng-template #noData>
+                <p class="no-data-message">В этом файле нет данных для отображения.</p>
+            </ng-template>
+        </div>
     </div>
   </div>
 
 </ng-container>
 
-<!-- Этот блок теперь будет показываться, пока данные не загружены -->
 <ng-template #noStatistics>
   <div class="no-statistics-message">
     <p>Данные для отображения статистики отсутствуют. Перейдите на страницу загрузки и проанализируйте CSV файлы.</p>
