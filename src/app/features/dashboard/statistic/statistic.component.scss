@@ -1,156 +1,38 @@
-// File: pars/src/app/features/dashboard/statistic/statistic.component.scss
 
-// Используем переменные для цветов и отступов для легкой кастомизации
+
 :host {
-  --card-bg-color: #ffffff;
-  --card-border-radius: 8px;
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --primary-text-color: #212529;
-  --secondary-text-color: #6c757d;
-  --divider-color: #e9ecef;
-  --table-header-bg: #f8f9fa;
-  --table-row-hover-bg: #f1f3f5;
+  display: block;
 }
 
 .statistics-container {
-  padding: 1.5rem;
-  max-width: 1600px;
-  margin: 0 auto;
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--primary-text-color);
-    margin-bottom: 1.5rem;
-  }
+  padding: 1rem;
 }
 
-// Сетка для расположения графиков
-.charts-grid {
-  display: grid;
-  // Эта строка - магия: создает адаптивные колонки.
-  // Каждая колонка будет минимум 450px, но сможет растягиваться,
-  // чтобы заполнить пространство. На маленьких экранах они выстроятся друг под другом.
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 1.5rem;
+h1 {
+  text-align: center;
   margin-bottom: 2rem;
 }
 
-// Стиль для карточки, в которой находится график
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
 .chart-card {
-  background-color: var(--card-bg-color);
-  border-radius: var(--card-border-radius);
-  box-shadow: var(--card-shadow);
+  background-color: var(--surface-color);
   padding: 1.5rem;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  }
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
 }
 
-// Разделитель между секциями
-.section-divider {
-  border: none;
-  height: 1px;
-  background-color: var(--divider-color);
-  margin: 3rem 0;
-}
-
-.tables-section {
-  h1 {
-    font-size: 1.75rem;
+// Темная тема для графиков ApexCharts
+// (ApexCharts нужно настраивать через JS, но мы можем задать цвета текста)
+::ng-deep {
+  .apexcharts-title-text, .apexcharts-legend-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label {
+    fill: var(--primary-text-color) !important;
   }
-}
-
-.file-block {
-  margin-bottom: 2.5rem;
-
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: var(--primary-text-color);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--divider-color);
-  }
-}
-
-// Обертка для таблицы, чтобы обеспечить горизонтальную прокрутку на мобильных
-.table-wrapper {
-  overflow-x: auto;
-  background-color: var(--card-bg-color);
-  border-radius: var(--card-border-radius);
-  box-shadow: var(--card-shadow);
-  padding: 0.5rem;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px; // Минимальная ширина, чтобы колонки не сжимались слишком сильно
-
-  th, td {
-    padding: 0.9rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid var(--divider-color);
-    white-space: nowrap; // Предотвращает перенос текста в ячейках
-  }
-
-  thead th {
-    background-color: var(--table-header-bg);
-    font-weight: 600;
-    color: var(--primary-text-color);
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  tbody tr {
-    transition: background-color 0.15s ease-in-out;
-
-    &:hover {
-      background-color: var(--table-row-hover-bg);
-    }
-  }
-
-  // "Зебра" для лучшей читаемости
-  tbody tr:nth-child(even) {
-    background-color: #fcfcfc;
-  }
-
-  tbody td {
-    font-size: 0.95rem;
-    color: #495057;
-  }
-}
-
-// Сообщение, если в файле нет данных
-.no-data-message {
-  text-align: center;
-  padding: 2rem;
-  color: var(--secondary-text-color);
-  font-style: italic;
-}
-
-// Сообщение, если вообще нет статистики для отображения
-.no-statistics-message {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 50vh;
-  text-align: center;
-  padding: 2rem;
-  
-  p {
-    max-width: 450px;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: var(--secondary-text-color);
-    background-color: var(--table-header-bg);
-    padding: 2rem;
-    border-radius: var(--card-border-radius);
-    border: 1px dashed #ced4da;
+  .apexcharts-tooltip {
+    color: #333; // У тултипа обычно свой фон, текст делаем темным
   }
 }

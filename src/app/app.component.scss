@@ -1,0 +1,11 @@
+// pars/src/app/app.component.scss
+main {
+  padding: 1.5rem;
+}
+
+// Адаптивность основного контейнера
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+  }
+}

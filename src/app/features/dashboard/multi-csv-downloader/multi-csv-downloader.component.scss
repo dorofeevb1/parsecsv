@@ -1,60 +1,221 @@
-.uploader-container {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  border: 1px solid #e0e0e0;
-  padding: 24px;
-  border-radius: 12px;
-  max-width: 550px;
-  margin: 40px auto;
-  text-align: center;
-  background-color: #f9f9f9;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+/* ==========================================================================
+   Основной контейнер и типографика
+   ========================================================================== */
+:host {
+  display: block;
+  max-width: 800px;
+  margin: 2rem auto;
 }
-.uploader-container h2 { margin-top: 0; color: #333; }
-.uploader-container p { color: #666; line-height: 1.5; margin-bottom: 24px; }
+
+.uploader-container {
+  background-color: var(--surface-color);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+p {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-size: 1rem;
+  color: var(--text-secondary-color);
+}
+
+
+/* ==========================================================================
+   Интерактивные элементы: селектор и загрузчик файлов
+   ========================================================================== */
+.platform-selector {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
 
 .file-input-label {
-  display: inline-block;
-  padding: 12px 24px;
-  background-color: #6c757d;
-  color: white;
-  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem 1rem;
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 0.2s;
-  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  color: var(--text-secondary-color);
+
+  // Иконка для наглядности
+  &::before {
+    content: 'upload_file';
+    font-family: 'Material Icons';
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    border-color: var(--accent-color);
+    background-color: rgba(var(--accent-color-rgb), 0.05);
+    color: var(--accent-color-light);
+
+    &::before {
+      transform: scale(1.1);
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: transparent;
+    border-color: var(--border-color);
+  }
 }
-.file-input-label:hover { background-color: #5a6268; }
-.file-input-label.disabled { background-color: #c0c0c0; cursor: not-allowed; }
-.file-input { display: none; }
-.hint { font-size: 14px; color: #666; margin-top: 8px; }
 
-.file-list-container { margin-top: 20px; text-align: left; }
-.file-list-container h4 { margin-bottom: 10px; color: #333; }
-.file-list { list-style: none; padding: 0; margin: 0; border: 1px solid #ddd; border-radius: 8px; background: white; }
-.file-list li { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; font-size: 15px; border-bottom: 1px solid #eee; }
-.file-list li:last-child { border-bottom: none; }
-.remove-btn { background: none; border: none; color: #dc3545; font-size: 24px; line-height: 1; cursor: pointer; padding: 0 5px; }
-.remove-btn:hover { color: #a01c28; }
-.remove-btn:disabled { color: #ccc; cursor: not-allowed; }
+// Скрываем стандартный input[type=file]
+.file-input {
+  display: none;
+}
 
-.button-wrapper { margin-top: 24px; min-height: 50px; display: flex; justify-content: center; align-items: center; }
-.process-button {
-  background-color: #0d6efd;
-  color: white;
+.hint {
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--text-secondary-color);
+  margin-top: 0.5rem;
+  padding-right: 0.25rem;
+}
+
+
+/* ==========================================================================
+   Список выбранных файлов
+   ========================================================================== */
+.file-list-container {
+  margin-top: 2.5rem;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.file-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--surface-hover-color);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid var(--primary-color);
+}
+
+.remove-btn {
+  background: none;
   border: none;
-  padding: 14px 28px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 8px;
+  font-size: 1.5rem;
+  line-height: 1;
+  padding: 0.25rem;
+  color: var(--text-secondary-color);
   cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-  min-width: 200px;
-}
-.process-button:hover:not(:disabled) { background-color: #0b5ed7; transform: translateY(-2px); }
-.process-button:disabled { background-color: #a0a0a0; cursor: not-allowed; }
-.spinner { border: 4px solid rgba(255, 255, 255, 0.3); border-radius: 50%; border-top-color: #fff; width: 22px; height: 22px; animation: spin 1s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+  transition: color 0.2s ease, transform 0.2s ease;
 
-.status-box { margin-top: 20px; padding: 12px; border-radius: 8px; font-weight: 500; border: 1px solid transparent; }
-.status-box--in-progress { background-color: #eef2ff; color: #4338ca; border-color: #c7d2fe; }
-.status-box--success { background-color: #dcfce7; color: #166534; border-color: #bbf7d0; }
-.status-box--error { background-color: #fee2e2; color: #991b1b; border-color: #fecaca; }
+  &:hover {
+    color: var(--warn-color);
+    transform: scale(1.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+
+/* ==========================================================================
+   Кнопка обработки и статусы
+   ========================================================================== */
+.button-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.process-button {
+  // Стилизуем обычную кнопку, чтобы она выглядела как Material
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 24px;
+  height: 48px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: var(--text-on-primary-color);
+  box-shadow: var(--shadow-md);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--primary-color-light);
+  }
+
+  &:disabled {
+    background-color: rgba(var(--text-primary-color-rgb, 224, 224, 224), 0.12);
+    color: rgba(var(--text-primary-color-rgb, 224, 224, 224), 0.38);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+// Кастомный CSS спиннер для кнопки
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: var(--text-on-primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Блок со статусом операции
+.status-box {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid transparent;
+  text-align: center;
+  font-weight: 500;
+
+  &--in-progress {
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color-light);
+  }
+  &--success {
+    background-color: rgba(var(--accent-color-rgb), 0.1);
+    border-color: var(--accent-color);
+    color: var(--accent-color-light);
+  }
+  &--error {
+    background-color: rgba(var(--warn-color-rgb), 0.1);
+    border-color: var(--warn-color);
+    color: var(--warn-color);
+  }
+}

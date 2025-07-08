@@ -1,22 +1,42 @@
-.auth-wrapper {
+// pars/src/app/features/auth/login/login.component.scss (то же самое для register)
+:host {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: calc(100vh - 100px); // Занимает всю высоту минус шапка
+}
+
+.auth-wrapper {
+  width: 100%;
+  max-width: 400px;
 }
 
 mat-card {
-  width: 360px;
-  padding: 1.5rem;
+  padding: 2rem;
+}
+
+h2, mat-card-title {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
 .full-width {
   width: 100%;
 }
 
+mat-form-field {
+  margin-bottom: 1rem;
+}
+
+button[mat-raised-button] {
+  margin-top: 1rem;
+  padding: 12px 0;
+  font-size: 1rem;
+}
+
 .actions {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-  font-size: 0.875rem;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
 }

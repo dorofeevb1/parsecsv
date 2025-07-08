@@ -1,190 +1,123 @@
-.app-header {
-  background: rgba(20, 20, 25, 0.8); /* Полупрозрачный темный фон */
-  backdrop-filter: blur(10px); /* Эффект размытия для современных браузеров */
-  -webkit-backdrop-filter: blur(10px);
-  padding: 0 2rem;
+:host {
+  display: block;
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  width: 100%;
+}
+
+.app-header {
+  background-color: var(--surface-color);
+  box-shadow: var(--shadow-sm);
+  padding: 0 2rem;
 }
 
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
-  max-width: 1400px;
-  margin: 0 auto;
+  height: 64px;
 }
 
-/* Стили логотипа */
 .logo {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #fff;
-  text-decoration: none;
-  letter-spacing: 1px;
-  transition: color 0.3s ease;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary-color);
+  transition: transform 0.2s ease-out;
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
-.logo:hover {
-  color: #00aaff; /* Яркий акцентный цвет */
-}
-
-/* Навигационные ссылки */
 .nav-links {
   display: flex;
-  align-items: center;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 2.5rem;
-}
+  gap: 1.5rem;
 
-.nav-links a {
-  color: #c0c0c0; /* Светло-серый для неактивных ссылок */
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  position: relative;
-  padding: 8px 0;
-  transition: color 0.3s ease;
-}
+  a {
+    position: relative;
+    font-weight: 500;
+    color: var(--text-secondary-color);
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
 
-/* Эффект подчеркивания при наведении */
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: #00aaff;
-  transform: scaleX(0);
-  transform-origin: bottom right;
-  transition: transform 0.3s ease-out;
-}
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent-color);
+      transition: width 0.3s ease;
+    }
 
-.nav-links a:hover {
-  color: #fff;
-}
-
-.nav-links a:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-
-/* Стиль для активной ссылки */
-.nav-links a.active-link {
-  color: #00aaff;
-  font-weight: 700;
-}
-
-.nav-links a.active-link::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-
-
-/* Кнопка выхода */
-.logout-btn {
-  background-color: transparent;
-  border: 2px solid #00aaff;
-  color: #00aaff;
-  padding: 8px 20px;
-  border-radius: 50px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.logout-btn:hover {
-  background-color: #00aaff;
-  color: #141419;
-  box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
-}
-
-.mobile-only {
-  display: none; /* Скрываем по умолчанию */
-}
-
-/* Кнопка "Гамбургер" (скрыта на больших экранах) */
-.hamburger-menu {
-  display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  z-index: 1001; /* Выше чем .nav-links */
-}
-
-.hamburger-menu span {
-  display: block;
-  width: 28px;
-  height: 3px;
-  background-color: #fff;
-  margin: 5px 0;
-  transition: all 0.4s ease;
-}
-
-/* Анимация гамбургера в крестик */
-.hamburger-menu.open span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
-}
-.hamburger-menu.open span:nth-child(2) {
-  opacity: 0;
-}
-.hamburger-menu.open span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
-}
-
-/* ----- АДАПТИВНОСТЬ (для планшетов и мобильных) ----- */
-@media (max-width: 768px) {
-  .nav-links {
-    position: absolute;
-    top: 70px; /* Высота хедера */
-    left: 0;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    background: #141419;
+    &:hover, &.active-link {
+      color: var(--text-primary-color);
+    }
     
-    /* Скрываем меню с помощью max-height для плавной анимации */
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-in-out;
+    &.active-link::after {
+      width: 100%;
+    }
   }
+}
 
-  .nav-links.menu-open {
-    max-height: 500px; /* Достаточно большая высота, чтобы вместить все пункты */
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
+.logout-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary-color);
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-  .nav-links li {
-    width: 100%;
-    text-align: center;
-    padding: 1rem 0;
+  &:hover {
+    background-color: var(--primary-color);
+    color: var(--text-on-primary-color);
+    border-color: var(--primary-color);
   }
-  
-  .nav-links a {
-    font-size: 1.2rem;
+}
+
+.hamburger-menu, .mobile-only {
+  display: none;
+}
+
+// Адаптация для мобильных устройств
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 1rem;
   }
 
   .desktop-only {
     display: none;
   }
 
-  .mobile-only {
-    display: inline-block; /* Показываем кнопку выхода в мобильном меню */
-    margin-top: 1rem;
-    width: 80%;
+  .hamburger-menu {
+    display: flex; // Показываем гамбургер
+    // ... стили для гамбургера
   }
 
-  .hamburger-menu {
-    display: block;
+  .nav-links {
+    // Скрываем меню и показываем его по клику на гамбургер
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: var(--surface-color);
+    padding: 1rem;
+    transform: translateY(-120%);
+    transition: transform 0.3s ease-in-out;
+    border-bottom: 1px solid var(--border-color);
+
+    &.menu-open {
+      transform: translateY(0);
+    }
+
+    .mobile-only {
+      display: block; // Показываем кнопку выхода в мобильном меню
+      margin-top: 1rem;
+    }
   }
 }
