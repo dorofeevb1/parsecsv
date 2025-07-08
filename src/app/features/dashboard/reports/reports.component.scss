@@ -1,40 +1,52 @@
-/* src/app/features/dashboard/reports/reports.component.scss */
+/* ==========================================================================
+   SCSS для reports.component.scss (Стиль: Строгий Минимализм)
+   ========================================================================== */
 
-// Use :host for component-level style encapsulation.
+// Используем :host для инкапсуляции стилей на уровне компонента.
 :host {
   display: block;
 }
 
-// Main container that holds the report generation card.
+// Основной контейнер, который держит карточку с отчетом.
 .reports-container {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+  // Добавляем отступы сверху и по бокам для "воздуха".
+  margin: 2rem auto;
+  padding: 0 1rem;
 
-  // Overriding global card styles for this specific component if needed.
   .mat-card {
     padding: 2rem;
   }
+  
+  .mat-card-header {
+    padding-bottom: 1.5rem;
+  }
+  
+  .mat-card-title {
+    font-size: 1.75rem;
+  }
+  
+  .mat-card-subtitle {
+    margin-top: 0.25rem;
+    color: var(--color-text-secondary);
+  }
 }
 
-// Toolbar containing the download button.
+// Панель с кнопкой "Скачать CSV".
 .actions-toolbar {
   display: flex;
   justify-content: flex-end;
   align-items: center;
 
   .mat-mdc-raised-button {
-    font-weight: 600;
+    // Стили кнопки соответствуют глобальным, но мы можем задать размеры.
     padding: 0.75rem 1.5rem;
-    line-height: 1.5;
-    min-width: 150px; // Ensure button has a decent width
-    position: relative; // For positioning the spinner
-    transition: all 0.3s ease;
+    position: relative;
+    min-width: 160px;
   }
 
-  // Styles for the spinner inside the button during the loading state.
+  // Спиннер загрузки внутри кнопки.
   .button-spinner {
-    // Center the spinner perfectly inside the button.
     position: absolute;
     top: 50%;
     left: 50%;
@@ -42,115 +54,115 @@
   }
 }
 
-// A visual separator between the actions and the preview section.
-.section-divider {
-  border: 0;
-  height: 1px;
-  background: var(--color-border);
-  margin: 2rem 0;
-}
-
-// The section where the data tables are previewed.
+// Секция предпросмотра данных.
 .preview-section {
   h3 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 2rem;
-  }
-}
-
-// A block for each individual file's data.
-.file-block {
-  margin-bottom: 3rem;
-
-  // Filename header (e.g., "file1.csv").
-  h2 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
   }
 }
 
-// --- Consistent Table Styling (matches statistic.component.scss) ---
+// Блок для данных каждого отдельного файла.
+.file-block {
+  margin-bottom: 3rem;
 
-// Wrapper for horizontal scrolling on wide tables.
+  // Заголовок с именем файла (например, "file1.csv").
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+  }
+}
+
+// Обертка для таблицы, обеспечивающая горизонтальный скролл.
 .table-wrapper {
   overflow-x: auto;
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
-  background-color: var(--color-surface);
+  // Используем самый темный фон для контраста с поверхностью карточки.
+  background-color: var(--color-bg);
 
   table {
     width: 100%;
     border-collapse: collapse;
-    white-space: nowrap;
+    white-space: nowrap; // Предотвращает перенос строк в ячейках
 
     th, td {
-      padding: 1rem 1.25rem;
+      padding: 0.8rem 1.2rem;
       text-align: left;
       border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
     }
 
     th {
       font-weight: 600;
       color: var(--color-text-secondary);
-      background-color: var(--color-background-light);
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      letter-spacing: 0.5px;
+      // Фон заголовков совпадает с фоном карточки.
+      background-color: var(--color-surface);
+      text-transform: capitalize;
+      font-size: 0.85rem;
+    }
+    
+    td {
+      font-size: 0.9rem;
     }
 
     tbody tr:last-child td {
-      border-bottom: none;
+      border-bottom: none; // Убираем границу у последней строки
     }
 
+    // Добавляем легкий hover-эффект для строк.
     tbody tr:hover {
-      background-color: rgba(99, 102, 241, 0.05);
+      background-color: rgba(56, 139, 253, 0.05);
     }
   }
 }
 
-// Message shown when a specific file has no data.
+// Сообщение, если в конкретном файле нет данных.
 .no-data-message {
   padding: 2rem;
   text-align: center;
   color: var(--color-text-secondary);
   border: 1px dashed var(--color-border);
   border-radius: var(--border-radius);
-  background-color: rgba(10, 9, 23, 0.5);
+  background-color: var(--color-bg);
 }
 
-// --- "Empty State" for when no data is loaded at all ---
-
+// --- "Пустое состояние", если данных для отчета нет вообще ---
 .empty-state {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  min-height: 60vh;
+  // Растягиваем блок по высоте для центрирования.
+  min-height: calc(100vh - var(--header-height) - 4rem);
 
   .mat-card {
-    max-width: 550px;
+    max-width: 500px;
     text-align: center;
     padding: 3rem 2.5rem;
-    border: 1px solid var(--color-border);
+    // Убираем фон карточки, чтобы она слилась с окружением.
+    background-color: transparent !important;
+    border: 1px solid var(--color-border) !important;
   }
 
-  // "Cloud off" icon styling.
   mat-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
     color: var(--color-text-secondary);
     margin-bottom: 1.5rem;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     color: var(--color-text-primary);
   }
 
@@ -160,20 +172,20 @@
     margin-bottom: 2rem;
   }
 
-  // Custom styling for the stroked (outlined) button in the empty state.
+  // Стилизация обведенной кнопки "Перейти к загрузке".
   a.mat-stroked-button {
-    // This uses Material's CSS custom properties to theme the component.
-    --mdc-outlined-button-label-text-color: var(--color-primary-accent);
-    --mdc-outlined-button-outline-color: var(--color-primary-accent);
-    --mdc-outlined-button-hover-state-layer-color: var(--color-primary-accent);
-
-    padding: 0.6rem 1.5rem;
+    // Переопределяем цвета Material с помощью наших переменных.
+    --mdc-outlined-button-label-text-color: var(--color-accent-hover);
+    --mdc-outlined-button-outline-color: var(--color-border);
+    
     font-weight: 600;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
 
     &:hover {
-      background-color: rgba(99, 102, 241, 0.1); // Use primary accent with low opacity.
-      color: var(--color-primary-accent);
+      background-color: rgba(56, 139, 253, 0.1);
+      --mdc-outlined-button-outline-color: var(--color-accent);
     }
   }
 }

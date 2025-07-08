@@ -14,7 +14,7 @@ type AllFilesPayload = { [filename: string]: any[] };
 export class MultiCsvDownloaderComponent {
   private metricsService = inject(MetricsService);
   private router = inject(Router);
-  readonly MAX_FILES = 3;
+  readonly MAX_FILES = 4;
   readonly platforms = ['YouTube', 'VK', 'TikTok'];
   selectedPlatform: string = '';
   selectedFiles: File[] = [];
