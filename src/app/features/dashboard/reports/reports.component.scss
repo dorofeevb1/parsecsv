@@ -4,7 +4,7 @@
 $primary-color: mat.get-color-from-palette(mat.$blue-grey-palette, 700); // Dark neutral for primary elements
 $accent-color: mat.get-color-from-palette(mat.$cyan-palette, 500); // Subtle accent for interactivity
 $error-color: mat.get-color-from-palette(mat.$red-palette, 600); // Error state color
-$background-color: #f9fafb; // Light background for contrast
+$background-color: var(--color-surface);
 $text-primary: mat.get-color-from-palette(mat.$grey-palette, 900); // Dark text
 $text-secondary: mat.get-color-from-palette(mat.$grey-palette, 600); // Lighter text
 $border-color: mat.get-color-from-palette(mat.$grey-palette, 300); // Soft border color
