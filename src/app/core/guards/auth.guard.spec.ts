@@ -1,17 +1,42 @@
 import { TestBed } from '@angular/core/testing';
-import { CanActivateFn } from '@angular/router';
-
+import { Router, UrlTree } from '@angular/router';
 import { authGuard } from './auth.guard';
+import { AuthService } from '../service/auth/auth.service';
 
 describe('authGuard', () => {
-  const executeGuard: CanActivateFn = (...guardParameters) => 
-      TestBed.runInInjectionContext(() => authGuard(...guardParameters));
+  let authServiceMock: jasmine.SpyObj<AuthService>;
+  let routerMock: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    authServiceMock = jasmine.createSpyObj('AuthService', ['isAuthenticated']);
+    routerMock = jasmine.createSpyObj('Router', ['createUrlTree']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: Router, useValue: routerMock }
+      ]
+    });
   });
 
-  it('should be created', () => {
-    expect(executeGuard).toBeTruthy();
+  it('should allow activation when user is authenticated', () => {
+    authServiceMock.isAuthenticated.and.returnValue(true);
+    
+    // Запускаем гард в инъекционном контексте TestBed
+    const canActivate = TestBed.runInInjectionContext(() => authGuard(null!, null!));
+    
+    expect(canActivate).toBe(true);
+    expect(routerMock.createUrlTree).not.toHaveBeenCalled();
+  });
+
+  it('should deny activation and redirect to /auth/login when user is not authenticated', () => {
+    authServiceMock.isAuthenticated.and.returnValue(false);
+    const urlTree = new UrlTree(); // Мок UrlTree
+    routerMock.createUrlTree.withArgs(['/auth/login']).and.returnValue(urlTree);
+
+    const canActivate = TestBed.runInInjectionContext(() => authGuard(null!, null!));
+    
+    expect(canActivate).toBe(urlTree);
+    expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/auth/login']);
   });
 });
