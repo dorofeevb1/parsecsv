@@ -1,191 +1,274 @@
-/* ==========================================================================
-   SCSS для reports.component.scss (Стиль: Строгий Минимализм)
-   ========================================================================== */
+@use '@angular/material' as mat;
 
-// Используем :host для инкапсуляции стилей на уровне компонента.
+// Define custom color variables for a minimalist palette
+$primary-color: mat.get-color-from-palette(mat.$blue-grey-palette, 700); // Dark neutral for primary elements
+$accent-color: mat.get-color-from-palette(mat.$cyan-palette, 500); // Subtle accent for interactivity
+$error-color: mat.get-color-from-palette(mat.$red-palette, 600); // Error state color
+$background-color: #f9fafb; // Light background for contrast
+$text-primary: mat.get-color-from-palette(mat.$grey-palette, 900); // Dark text
+$text-secondary: mat.get-color-from-palette(mat.$grey-palette, 600); // Lighter text
+$border-color: mat.get-color-from-palette(mat.$grey-palette, 300); // Soft border color
+$surface-color: #ffffff; // Card background
+
+// Host encapsulation for component-level styles
 :host {
   display: block;
+  background-color: $background-color;
 }
 
-// Основной контейнер, который держит карточку с отчетом.
+// Main container for reports with centered layout
 .reports-container {
   max-width: 1200px;
-  // Добавляем отступы сверху и по бокам для "воздуха".
   margin: 2rem auto;
   padding: 0 1rem;
 
   .mat-card {
-    padding: 2rem;
-  }
-  
-  .mat-card-header {
-    padding-bottom: 1.5rem;
-  }
-  
-  .mat-card-title {
-    font-size: 1.75rem;
-  }
-  
-  .mat-card-subtitle {
-    margin-top: 0.25rem;
-    color: var(--color-text-secondary);
+    padding: 2.5rem; // Increased padding for breathing room
+    border-radius: 12px; // Softer corners
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); // Subtle shadow
+    background: $surface-color;
+    animation: fadeIn 0.4s ease-in-out; // Smooth entry animation
+
+    .mat-card-header {
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid $border-color; // Divider for header
+    }
+
+    .mat-card-title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    .mat-card-subtitle {
+      margin-top: 0.25rem;
+      color: $text-secondary;
+      font-size: 0.95rem;
+    }
   }
 }
 
-// Панель с кнопкой "Скачать CSV".
+// Actions toolbar for download button
 .actions-toolbar {
   display: flex;
   justify-content: flex-end;
-  align-items: center;
+  margin-bottom: 1.5rem;
 
   .mat-mdc-raised-button {
-    // Стили кнопки соответствуют глобальным, но мы можем задать размеры.
     padding: 0.75rem 1.5rem;
-    position: relative;
     min-width: 160px;
-  }
+    position: relative;
+    background: $primary-color;
+    color: #ffffff;
+    transition: background 0.3s ease, transform 0.2s ease;
 
-  // Спиннер загрузки внутри кнопки.
-  .button-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    &:hover:not(:disabled) {
+      background: mat.get-color-from-palette(mat.$blue-grey-palette, 800);
+      transform: translateY(-1px); // Subtle lift effect
+    }
+
+    &[disabled] {
+      background: mat.get-color-from-palette(mat.$grey-palette, 400);
+      cursor: not-allowed;
+    }
+
+    .button-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 
-// Секция предпросмотра данных.
+// Section divider for visual separation
+.section-divider {
+  border: 0;
+  height: 1px;
+  background: $border-color;
+  margin: 1.5rem 0;
+}
+
+// Preview section for data display
 .preview-section {
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: var(--color-text-primary);
+    color: $text-primary;
+    border-bottom: 2px solid $border-color; // Underline for emphasis
+    padding-bottom: 0.5rem;
   }
 }
 
-// Блок для данных каждого отдельного файла.
+// File block for each dataset
 .file-block {
   margin-bottom: 3rem;
 
-  // Заголовок с именем файла (например, "file1.csv").
   h2 {
     font-size: 1.25rem;
     font-weight: 500;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text-primary);
+    border-bottom: 1px solid $border-color;
+    color: $text-primary;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $accent-color; // Interactive hover effect
+    }
+  }
+
+  // Table wrapper with scroll and styling
+  .table-wrapper {
+    overflow-x: auto;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    background: $surface-color;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      white-space: nowrap;
+
+      th, td {
+        padding: 0.8rem 1.2rem;
+        text-align: left;
+        border-bottom: 1px solid $border-color;
+        vertical-align: middle;
+      }
+
+      th {
+        font-weight: 600;
+        color: $text-secondary;
+        background: rgba(0, 0, 0, 0.02); // Slight background for headers
+        text-transform: capitalize;
+        font-size: 0.85rem;
+      }
+
+      td {
+        font-size: 0.9rem;
+        color: $text-primary;
+      }
+
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      tbody tr:hover {
+        background: rgba(0, 0, 0, 0.03); // Subtle hover effect
+      }
+    }
+  }
+
+  // No data message for empty files
+  .no-data-message {
+    padding: 1.5rem;
+    text-align: center;
+    color: $text-secondary;
+    border: 1px dashed $border-color;
+    border-radius: 8px;
+    background: $surface-color;
   }
 }
 
-// Обертка для таблицы, обеспечивающая горизонтальный скролл.
-.table-wrapper {
-  overflow-x: auto;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
-  // Используем самый темный фон для контраста с поверхностью карточки.
-  background-color: var(--color-bg);
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    white-space: nowrap; // Предотвращает перенос строк в ячейках
-
-    th, td {
-      padding: 0.8rem 1.2rem;
-      text-align: left;
-      border-bottom: 1px solid var(--color-border);
-      vertical-align: middle;
-    }
-
-    th {
-      font-weight: 600;
-      color: var(--color-text-secondary);
-      // Фон заголовков совпадает с фоном карточки.
-      background-color: var(--color-surface);
-      text-transform: capitalize;
-      font-size: 0.85rem;
-    }
-    
-    td {
-      font-size: 0.9rem;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none; // Убираем границу у последней строки
-    }
-
-    // Добавляем легкий hover-эффект для строк.
-    tbody tr:hover {
-      background-color: rgba(56, 139, 253, 0.05);
-    }
-  }
-}
-
-// Сообщение, если в конкретном файле нет данных.
-.no-data-message {
-  padding: 2rem;
-  text-align: center;
-  color: var(--color-text-secondary);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--border-radius);
-  background-color: var(--color-bg);
-}
-
-// --- "Пустое состояние", если данных для отчета нет вообще ---
+// Empty state for no data scenario
 .empty-state {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  // Растягиваем блок по высоте для центрирования.
-  min-height: calc(100vh - var(--header-height) - 4rem);
+  min-height: calc(100vh - 4rem); // Adjusted for header height
 
   .mat-card {
     max-width: 500px;
     text-align: center;
     padding: 3rem 2.5rem;
-    // Убираем фон карточки, чтобы она слилась с окружением.
-    background-color: transparent !important;
-    border: 1px solid var(--color-border) !important;
-  }
+    background: transparent;
+    border: 1px solid $border-color;
 
-  mat-icon {
-    font-size: 3rem;
-    width: 3rem;
-    height: 3rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 1.5rem;
-  }
+    mat-icon {
+      font-size: 3rem;
+      color: $text-secondary;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease;
 
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: var(--color-text-primary);
-  }
-
-  p {
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: 2rem;
-  }
-
-  // Стилизация обведенной кнопки "Перейти к загрузке".
-  a.mat-stroked-button {
-    // Переопределяем цвета Material с помощью наших переменных.
-    --mdc-outlined-button-label-text-color: var(--color-accent-hover);
-    --mdc-outlined-button-outline-color: var(--color-border);
-    
-    font-weight: 600;
-    padding: 0.6rem 1.5rem;
-    border-radius: var(--border-radius);
-    transition: var(--transition);
-
-    &:hover {
-      background-color: rgba(56, 139, 253, 0.1);
-      --mdc-outlined-button-outline-color: var(--color-accent);
+      &:hover {
+        transform: scale(1.1); // Interactive icon hover
+      }
     }
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: $text-primary;
+    }
+
+    p {
+      color: $text-secondary;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    a.mat-stroked-button {
+      font-weight: 600;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      border-color: $accent-color;
+      color: $accent-color;
+      transition: background 0.3s ease, color 0.3s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: mat.get-color-from-palette(mat.$cyan-palette, 700);
+      }
+    }
+  }
+}
+
+// Keyframe animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .reports-container {
+    margin: 1rem auto;
+    padding: 0 0.5rem;
+
+    .mat-card {
+      padding: 1.5rem;
+    }
+
+    .mat-card-title {
+      font-size: 1.5rem;
+    }
+
+    .preview-section h3 {
+      font-size: 1.3rem;
+    }
+
+    .file-block h2 {
+      font-size: 1.1rem;
+    }
+
+    .table-wrapper table th,
+    .table-wrapper table td {
+      padding: 0.6rem 1rem;
+      font-size: 0.85rem;
+    }
+  }
+
+  .empty-state .mat-card {
+    padding: 2rem 1.5rem;
   }
 }
