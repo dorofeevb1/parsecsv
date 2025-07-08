@@ -1,221 +1,217 @@
-/* ==========================================================================
-   Основной контейнер и типографика
-   ========================================================================== */
+/* src/app/features/dashboard/multi-csv-downloader/multi-csv-downloader.component.scss */
+
+// Use :host for component-level style encapsulation.
 :host {
-  display: block;
-  max-width: 800px;
-  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; // Align to top
+  padding: 2rem 1rem;
 }
 
+// The main card-like container for the uploader functionality.
 .uploader-container {
-  background-color: var(--surface-color);
-  padding: 2rem;
+  width: 100%;
+  max-width: 700px;
+  padding: 2.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  
+  p {
+    color: var(--color-text-secondary);
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
 }
 
-h2 {
-  text-align: center;
-  font-size: 1.75rem;
-  margin-bottom: 0.5rem;
-}
-
-p {
-  text-align: center;
-  margin-bottom: 2.5rem;
-  font-size: 1rem;
-  color: var(--text-secondary-color);
-}
-
-
-/* ==========================================================================
-   Интерактивные элементы: селектор и загрузчик файлов
-   ========================================================================== */
+// Styles for the platform selection dropdown.
 .platform-selector {
   width: 100%;
   margin-bottom: 1.5rem;
 }
 
+// The main file input area, styled as a dropzone.
 .file-input-label {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 2.5rem 1rem;
-  border: 2px dashed var(--border-color);
+  width: 100%;
+  padding: 2.5rem;
+  border: 2px dashed var(--color-border);
   border-radius: var(--border-radius);
+  text-align: center;
+  color: var(--color-text-secondary);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  color: var(--text-secondary-color);
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-size: 1.1rem;
 
-  // Иконка для наглядности
-  &::before {
-    content: 'upload_file';
-    font-family: 'Material Icons';
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-    transition: transform 0.2s ease;
+  &:hover:not(.disabled) {
+    border-color: var(--color-primary-accent);
+    color: var(--color-primary-accent);
+    background-color: rgba(99, 102, 241, 0.05);
   }
 
-  &:hover {
-    border-color: var(--accent-color);
-    background-color: rgba(var(--accent-color-rgb), 0.05);
-    color: var(--accent-color-light);
-
-    &::before {
-      transform: scale(1.1);
-    }
-  }
-
+  // Styles for the disabled state (e.g., when max files are selected).
   &.disabled {
     cursor: not-allowed;
-    opacity: 0.5;
-    background-color: transparent;
-    border-color: var(--border-color);
+    opacity: 0.6;
+    background-color: var(--color-background-light);
+    border-style: solid;
   }
 }
 
-// Скрываем стандартный input[type=file]
+// The actual <input type="file"> is hidden; the label acts as the interface.
 .file-input {
   display: none;
 }
 
+// Small text indicating how many files are left to upload.
 .hint {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
   text-align: right;
-  font-size: 0.9rem;
-  color: var(--text-secondary-color);
   margin-top: 0.5rem;
-  padding-right: 0.25rem;
 }
 
-
-/* ==========================================================================
-   Список выбранных файлов
-   ========================================================================== */
+// Container for the list of selected files.
 .file-list-container {
+  margin-top: 2rem;
+
+  h4 {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .file-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background-color: var(--color-background-light);
+      border-radius: var(--border-radius);
+      font-size: 0.9rem;
+      border: 1px solid transparent; // Use transparent border to prevent layout shift on hover
+      transition: border-color 0.3s ease;
+
+      &:hover {
+        border-color: var(--color-border);
+      }
+
+      // The "x" button to remove a file from the list.
+      .remove-btn {
+        background: transparent;
+        border: none;
+        color: var(--color-text-secondary);
+        font-size: 1.5rem;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0 0.5rem;
+        transition: color 0.3s ease, transform 0.2s ease;
+
+        &:hover:not(:disabled) {
+          color: var(--color-error);
+          transform: scale(1.1);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+}
+
+// Wrapper for the main "process" button.
+.button-wrapper {
   margin-top: 2.5rem;
 }
 
-.file-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.file-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--surface-hover-color);
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
-  border-left: 4px solid var(--primary-color);
-}
-
-.remove-btn {
-  background: none;
+// The primary call-to-action button.
+.process-button {
+  width: 100%;
+  padding: 0.8rem 0;
+  height: 48px; // Fixed height to prevent layout shift with spinner
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--color-primary-accent);
+  color: white;
   border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  padding: 0.25rem;
-  color: var(--text-secondary-color);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-
-  &:hover {
-    color: var(--warn-color);
-    transform: scale(1.2);
-  }
-
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: var(--color-text-secondary);
+  }
+
+  &:not(:disabled):hover {
+    background: var(--color-secondary-accent);
+  }
+
+  // The loading spinner.
+  .spinner {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
   }
 }
 
-
-/* ==========================================================================
-   Кнопка обработки и статусы
-   ========================================================================== */
-.button-wrapper {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-}
-
-.process-button {
-  // Стилизуем обычную кнопку, чтобы она выглядела как Material
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  height: 48px;
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: var(--border-radius);
-  border: none;
-  cursor: pointer;
-  background-color: var(--primary-color);
-  color: var(--text-on-primary-color);
-  box-shadow: var(--shadow-md);
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover:not(:disabled) {
-    background-color: var(--primary-color-light);
-  }
-
-  &:disabled {
-    background-color: rgba(var(--text-primary-color-rgb, 224, 224, 224), 0.12);
-    color: rgba(var(--text-primary-color-rgb, 224, 224, 224), 0.38);
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-}
-
-// Кастомный CSS спиннер для кнопки
-.spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: var(--text-on-primary-color);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 12px;
-}
-
+// Keyframe animation for the spinner.
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
-// Блок со статусом операции
+// The status message box that provides user feedback.
 .status-box {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding: 1rem;
   border-radius: var(--border-radius);
-  border: 1px solid transparent;
   text-align: center;
   font-weight: 500;
-
-  &--in-progress {
-    background-color: rgba(var(--primary-color-rgb), 0.1);
-    border-color: var(--primary-color);
-    color: var(--primary-color-light);
-  }
-  &--success {
-    background-color: rgba(var(--accent-color-rgb), 0.1);
-    border-color: var(--accent-color);
-    color: var(--accent-color-light);
-  }
+  border: 1px solid transparent;
+  
   &--error {
-    background-color: rgba(var(--warn-color-rgb), 0.1);
-    border-color: var(--warn-color);
-    color: var(--warn-color);
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+    border-color: var(--color-error);
+  }
+
+  &--success {
+    background-color: rgba(34, 197, 94, 0.1);
+    color: var(--color-success);
+    border-color: var(--color-success);
+  }
+  
+  &--in-progress {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--color-warning);
+    border-color: var(--color-warning);
   }
 }

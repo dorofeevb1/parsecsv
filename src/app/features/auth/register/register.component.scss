@@ -1,42 +1,107 @@
-// pars/src/app/features/auth/login/login.component.scss (то же самое для register)
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 100px); // Занимает всю высоту минус шапка
-}
+/* src/app/features/auth/register/register.component.scss */
 
+// The main wrapper that centers the registration card on the page.
 .auth-wrapper {
-  width: 100%;
-  max-width: 400px;
-}
-
-mat-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Ensure it takes up the available vertical space, minus the header and global padding.
+  min-height: calc(100vh - var(--header-height) - (2 * var(--content-padding)));
   padding: 2rem;
 }
 
-h2, mat-card-title {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-.full-width {
+// Styling for the Material Card container.
+mat-card {
   width: 100%;
+  max-width: 420px;
+  padding: 2rem; // Base padding.
+
+  // The global dark theme from styles.scss handles the card's base look.
+  .mat-card-header {
+    // Center the card title.
+    justify-content: center;
+  }
 }
 
-mat-form-field {
+// The main "Регистрация" title.
+mat-card-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--color-text-primary);
+}
+
+// Ensure form fields take up the full width and have proper spacing.
+.mat-form-field {
+  width: 100%;
   margin-bottom: 1rem;
 }
 
-button[mat-raised-button] {
-  margin-top: 1rem;
-  padding: 12px 0;
-  font-size: 1rem;
+// Styling for the server-side error message container.
+.error-message {
+  color: var(--color-error);
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 0.8rem 1rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
 }
 
-.actions {
+// The primary "Зарегистрироваться" button.
+button[type="submit"] {
+  width: 100%;
+  padding: 0.8rem 0;
+  height: 50px; // Fixed height to prevent layout shift when spinner is shown.
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  position: relative; // Needed to position the spinner inside.
+
+  // When loading, the text is hidden and the spinner is shown.
+  mat-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+// Container for the link back to the login page.
+mat-card-actions {
+  margin-top: 2rem;
+  padding: 0 16px 16px; // Adjust default Material padding.
   display: flex;
-  justify-content: space-between;
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
+  justify-content: center;
+
+  // Styling the link itself.
+  a[mat-button] {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    transition: color 0.3s ease;
+
+    &:hover {
+      background-color: transparent; // Override Material's default hover background.
+      color: var(--color-primary-accent);
+    }
+  }
+}
+
+// Responsive adjustments for smaller screens.
+@media (max-width: 480px) {
+  .auth-wrapper {
+    padding: 1rem;
+  }
+
+  mat-card {
+    padding: 1.5rem;
+  }
+
+  mat-card-title {
+    font-size: 1.75rem;
+  }
 }

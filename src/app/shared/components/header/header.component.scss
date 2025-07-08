@@ -1,47 +1,77 @@
+/* src/app/shared/components/header/header.component.scss */
+
+// Use :host for component-level style encapsulation.
 :host {
   display: block;
+  // This ensures the header takes up its designated space.
+}
+
+// The main header bar.
+.app-header {
+  // Use a semi-transparent background with a blur effect for a modern "glassmorphism" look.
+  background-color: rgba(10, 9, 23, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border-bottom: 1px solid var(--color-border);
+  height: var(--header-height);
+  padding: 0 var(--content-padding);
+  
+  // These properties are managed by the app.component.scss styles
+  // where <app-header> is placed, but are good to have for standalone use.
   position: sticky;
   top: 0;
+  width: 100%;
   z-index: 1000;
 }
 
-.app-header {
-  background-color: var(--surface-color);
-  box-shadow: var(--shadow-sm);
-  padding: 0 2rem;
-}
-
+// The inner navigation container.
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 64px;
+  height: 100%;
+  max-width: 1600px; // Allow the navbar to be wide on large screens.
+  margin: 0 auto;
 }
 
+// The "DataAnalyzer" logo.
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary-color);
-  transition: transform 0.2s ease-out;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+
   &:hover {
-    transform: scale(1.05);
+    color: var(--color-primary-accent);
   }
 }
 
+// The list of navigation links.
 .nav-links {
   display: flex;
+  align-items: center;
+  gap: 2rem;
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 1.5rem;
+
+  li {
+    // This allows buttons inside the nav to align correctly.
+    display: flex;
+    align-items: center;
+  }
 
   a {
-    position: relative;
     font-weight: 500;
-    color: var(--text-secondary-color);
-    padding: 0.5rem 0;
-    transition: color 0.2s ease;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    position: relative;
+    padding: 0.5rem 0.25rem; // Add padding for a larger click area.
+    transition: color 0.3s ease;
 
+    // The animated underline effect.
     &::after {
       content: '';
       position: absolute;
@@ -49,75 +79,128 @@
       left: 0;
       width: 0;
       height: 2px;
-      background-color: var(--accent-color);
-      transition: width 0.3s ease;
+      background: linear-gradient(90deg, var(--color-primary-accent), var(--color-secondary-accent));
+      transition: width 0.3s ease-out;
     }
 
-    &:hover, &.active-link {
-      color: var(--text-primary-color);
+    // Styles for the active or hovered link.
+    &:hover,
+    &.active-link {
+      color: var(--color-text-primary);
     }
     
+    // Animate the underline to full width on hover or when active.
+    &:hover::after,
     &.active-link::after {
       width: 100%;
     }
   }
 }
 
+// The "Выйти" button.
 .logout-btn {
-  background: none;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary-color);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
   padding: 0.5rem 1rem;
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  font-family: var(--font-family-base); // Ensure font consistency.
+  font-size: 0.9rem;
+  margin-left: 1rem; // Spacing from the nav links.
 
   &:hover {
-    background-color: var(--primary-color);
-    color: var(--text-on-primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--color-primary-accent);
+    border-color: var(--color-primary-accent);
+    color: white;
   }
 }
 
-.hamburger-menu, .mobile-only {
+// The hamburger menu icon for mobile.
+.hamburger-menu {
+  display: none; // Hidden by default, shown via media query.
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  padding: 0.5rem;
+  z-index: 1001; // Ensure it's above the mobile menu background.
+
+  span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    margin: 6px 0;
+    background-color: var(--color-text-primary);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+
+  // Animation to transform the hamburger into an "X".
+  &.open {
+    span:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+    span:nth-child(2) {
+      opacity: 0;
+    }
+    span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+  }
+}
+
+// Hide mobile-only button by default.
+.mobile-only {
   display: none;
 }
 
-// Адаптация для мобильных устройств
+// --- Responsive Styles for Mobile View ---
 @media (max-width: 768px) {
-  .app-header {
-    padding: 0 1rem;
-  }
-
-  .desktop-only {
+  // Hide the desktop logout button.
+  .logout-btn.desktop-only {
     display: none;
   }
 
+  // Show the hamburger menu icon.
   .hamburger-menu {
-    display: flex; // Показываем гамбургер
-    // ... стили для гамбургера
+    display: block;
   }
 
+  // Hide the desktop navigation links.
   .nav-links {
-    // Скрываем меню и показываем его по клику на гамбургер
-    position: absolute;
-    top: 64px;
-    left: 0;
-    right: 0;
+    // Transform into a full-height fly-out menu from the right.
+    position: fixed;
+    top: 0;
+    right: -100%; // Initially off-screen.
+    width: min(75vw, 300px); // 75% of viewport width, but no more than 300px.
+    height: 100vh;
+    
+    background-color: var(--color-background-light);
+    border-left: 1px solid var(--color-border);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+
     flex-direction: column;
-    background-color: var(--surface-color);
-    padding: 1rem;
-    transform: translateY(-120%);
-    transition: transform 0.3s ease-in-out;
-    border-bottom: 1px solid var(--border-color);
+    justify-content: flex-start;
+    align-items: flex-start;
+    
+    padding: calc(var(--header-height) + 2rem) 2rem 2rem;
+    gap: 1.5rem;
+    
+    transition: right 0.4s ease-in-out;
 
+    // The .menu-open class slides the menu into view.
     &.menu-open {
-      transform: translateY(0);
+      right: 0;
     }
-
-    .mobile-only {
-      display: block; // Показываем кнопку выхода в мобильном меню
-      margin-top: 1rem;
-    }
+  }
+  
+  // Show the mobile-only logout button within the mobile menu.
+  .logout-btn.mobile-only {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin: 2rem 0 0 0; // Add space at the top.
+    padding: 0.75rem 1rem;
   }
 }

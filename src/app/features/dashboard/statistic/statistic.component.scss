@@ -1,38 +1,192 @@
+/* src/app/features/dashboard/statistic/statistic.component.scss */
 
-
+// Use :host for component-level style encapsulation.
 :host {
   display: block;
+  width: 100%;
 }
 
+// Main container for all statistics content.
 .statistics-container {
+  max-width: 1600px; // Allow content to expand on large monitors.
+  margin: 0 auto;
   padding: 1rem;
 }
 
+// Main titles for sections (e.g., "Визуальная статистика").
 h1 {
-  text-align: center;
+  font-size: 2.25rem; // ~36px
+  font-weight: 700;
+  color: var(--color-text-primary);
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
 }
 
+// Grid layout for the chart cards.
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 1.5rem;
+  // Responsive grid: automatically fits cards, min-width 450px, one column on small screens.
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 1.5rem; // Spacing between chart cards.
 }
 
+// Styling for each individual chart container.
 .chart-card {
-  background-color: var(--surface-color);
-  padding: 1.5rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-md);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+  // A subtle "lift" effect on hover to add interactivity.
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border-color: var(--color-primary-accent);
+  }
+
+  // NOTE: Styling child components (like ApexCharts) often requires
+  // ::ng-deep to pierce style encapsulation. Use with care.
+  // This ensures the chart's internal text elements match our dark theme.
+  ::ng-deep {
+    .apexcharts-title-text,
+    .apexcharts-legend-text,
+    .apexcharts-xaxis-label,
+    .apexcharts-yaxis-label,
+    .apexcharts-datalabel {
+      fill: var(--color-text-primary) !important;
+      font-family: var(--font-family-base) !important;
+    }
+    .apexcharts-tooltip {
+      background: var(--color-background-light) !important;
+      color: var(--color-text-primary) !important;
+      border: 1px solid var(--color-border) !important;
+    }
+    .apexcharts-grid-borders,
+    .apexcharts-gridlines-horizontal,
+    .apexcharts-gridlines-vertical {
+      border-color: var(--color-border) !important;
+    }
+  }
 }
 
-// Темная тема для графиков ApexCharts
-// (ApexCharts нужно настраивать через JS, но мы можем задать цвета текста)
-::ng-deep {
-  .apexcharts-title-text, .apexcharts-legend-text, .apexcharts-xaxis-label, .apexcharts-yaxis-label {
-    fill: var(--primary-text-color) !important;
+// The visual divider between the charts section and the tables section.
+.section-divider {
+  border: 0;
+  height: 1px;
+  background: var(--color-border);
+  margin: 4rem 0;
+}
+
+// Container for the detailed file-by-file tables.
+.tables-section {
+  .file-block {
+    margin-bottom: 3rem;
+
+    // Filename header (e.g., "file1.csv").
+    h2 {
+      font-size: 1.75rem; // ~28px
+      font-weight: 600;
+      color: var(--color-text-primary);
+      margin-bottom: 1.5rem;
+    }
   }
-  .apexcharts-tooltip {
-    color: #333; // У тултипа обычно свой фон, текст делаем темным
+}
+
+// Wrapper to enable horizontal scrolling on wide tables for smaller viewports.
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-surface);
+
+  // Custom scrollbar styling for a modern look.
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-accent);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap; // Prevents text from wrapping, forcing horizontal scroll.
+
+    th, td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 0.875rem; // ~14px
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-text-secondary);
+      // Use a slightly different dark shade for the header row.
+      background-color: var(--color-background-light);
+    }
+
+    td {
+      font-size: 0.9375rem; // ~15px
+      color: var(--color-text-primary);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none; // Cleaner look for the last row.
+    }
+
+    // Add a subtle hover effect to table rows.
+    tbody tr:hover {
+      background-color: rgba(99, 102, 241, 0.05); // Use primary accent with low opacity.
+    }
+  }
+}
+
+// Shared styling for placeholder messages when no data is present.
+.no-data-message,
+.no-statistics-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius);
+  margin-top: 1rem;
+  // Use a very subtle, darker background for the placeholder.
+  background-color: rgba(10, 9, 23, 0.5);
+
+  p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 500px;
+    margin: 0;
+  }
+}
+
+// Media queries for responsive design adjustments.
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  // On smaller screens, force charts to stack in a single column.
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .chart-card {
+    padding: 1rem;
   }
 }

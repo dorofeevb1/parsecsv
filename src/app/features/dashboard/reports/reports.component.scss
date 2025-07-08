@@ -1,58 +1,179 @@
+/* src/app/features/dashboard/reports/reports.component.scss */
 
+// Use :host for component-level style encapsulation.
 :host {
   display: block;
-  max-width: 1200px;
-  margin: 2rem auto;
 }
 
+// Main container that holds the report generation card.
+.reports-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+
+  // Overriding global card styles for this specific component if needed.
+  .mat-card {
+    padding: 2rem;
+  }
+}
+
+// Toolbar containing the download button.
 .actions-toolbar {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  justify-content: flex-end;
+  align-items: center;
+
+  .mat-mdc-raised-button {
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    line-height: 1.5;
+    min-width: 150px; // Ensure button has a decent width
+    position: relative; // For positioning the spinner
+    transition: all 0.3s ease;
+  }
+
+  // Styles for the spinner inside the button during the loading state.
+  .button-spinner {
+    // Center the spinner perfectly inside the button.
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
+// A visual separator between the actions and the preview section.
+.section-divider {
+  border: 0;
+  height: 1px;
+  background: var(--color-border);
+  margin: 2rem 0;
+}
+
+// The section where the data tables are previewed.
+.preview-section {
+  h3 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+  }
+}
+
+// A block for each individual file's data.
 .file-block {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+
+  // Filename header (e.g., "file1.csv").
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
 }
 
+// --- Consistent Table Styling (matches statistic.component.scss) ---
+
+// Wrapper for horizontal scrolling on wide tables.
 .table-wrapper {
   overflow-x: auto;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
+  background-color: var(--color-surface);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+
+    th, td {
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    th {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      background-color: var(--color-background-light);
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background-color: rgba(99, 102, 241, 0.05);
+    }
+  }
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-
-  th, td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-  }
-  
-  thead th {
-    background-color: var(--surface-hover-color);
-    font-weight: 600;
-  }
-  
-  tbody tr:last-child td {
-    border-bottom: none;
-  }
+// Message shown when a specific file has no data.
+.no-data-message {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: rgba(10, 9, 23, 0.5);
 }
+
+// --- "Empty State" for when no data is loaded at all ---
 
 .empty-state {
-  text-align: center;
-  padding: 3rem;
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: 60vh;
+
+  .mat-card {
+    max-width: 550px;
+    text-align: center;
+    padding: 3rem 2.5rem;
+    border: 1px solid var(--color-border);
+  }
+
+  // "Cloud off" icon styling.
   mat-icon {
     font-size: 4rem;
     width: 4rem;
     height: 4rem;
-    color: var(--secondary-text-color);
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text-primary);
   }
 
   p {
-    margin: 1rem 0 1.5rem 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  // Custom styling for the stroked (outlined) button in the empty state.
+  a.mat-stroked-button {
+    // This uses Material's CSS custom properties to theme the component.
+    --mdc-outlined-button-label-text-color: var(--color-primary-accent);
+    --mdc-outlined-button-outline-color: var(--color-primary-accent);
+    --mdc-outlined-button-hover-state-layer-color: var(--color-primary-accent);
+
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      background-color: rgba(99, 102, 241, 0.1); // Use primary accent with low opacity.
+      color: var(--color-primary-accent);
+    }
   }
 }
