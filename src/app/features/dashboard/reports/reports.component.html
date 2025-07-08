@@ -1,1 +1,71 @@
-<p>reports works!</p>
+      
+<!-- Основной контейнер, который отображается, только если данные загружены -->
+<div class="reports-container" *ngIf="processedData$ | async as data; else noData">
+  
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Генерация отчета</mat-card-title>
+      <mat-card-subtitle>Скачайте обработанные данные в формате CSV</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Панель с кнопкой для скачивания -->
+      <div class="actions-toolbar">
+        <button mat-raised-button color="primary" (click)="downloadAsCsv()" [disabled]="!data || isGeneratingCsv">
+          <mat-spinner *ngIf="isGeneratingCsv" diameter="20" class="button-spinner"></mat-spinner>
+          <span *ngIf="!isGeneratingCsv">Скачать CSV</span>
+        </button>
+      </div>
+
+      <hr class="section-divider">
+
+      <!-- Секция предпросмотра данных -->
+      <div class="preview-section">
+        <h3>Предпросмотр данных</h3>
+        
+        <!-- Итерируемся по каждому файлу в полученных данных -->
+        <div *ngFor="let file of data | keyvalue: originalOrder" class="file-block">
+          <h2>{{ file.key }}</h2>
+          
+          <!-- Оборачиваем таблицу для возможности горизонтального скролла на малых экранах -->
+          <div class="table-wrapper" *ngIf="file.value.length > 0; else noFileData">
+            <table>
+              <thead>
+                <tr>
+                  <th *ngFor="let header of getHeaders(file.key)">{{ header }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of file.value">
+                  <td *ngFor="let header of getHeaders(file.key)">{{ row[header] }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <ng-template #noFileData>
+            <p class="no-data-message">В этом файле нет данных для отображения.</p>
+          </ng-template>
+        </div>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
+
+</div>
+
+<!-- "Пустое состояние", если данные еще не были обработаны -->
+<ng-template #noData>
+  <div class="empty-state">
+    <mat-card>
+      <mat-card-content>
+        <mat-icon>cloud_off</mat-icon>
+        <h2>Данные для отчетов отсутствуют</h2>
+        <p>Пожалуйста, перейдите на страницу загрузки и проанализируйте CSV файлы, чтобы сгенерировать отчет.</p>
+        <a mat-stroked-button color="primary" routerLink="/dashboard/csv">Перейти к загрузке</a>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>
+
+    
