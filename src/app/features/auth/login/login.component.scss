@@ -1,97 +1,149 @@
-/* src/app/features/auth/login/login.component.scss */
+// Importing Angular Material theming utilities
+@use '@angular/material' as mat;
 
-// The main wrapper that centers the login card on the page.
+// Define primary and accent colors (customize as needed)
+$primary-color: mat.get-color-from-palette(mat.$indigo-palette, 500);
+$accent-color: mat.get-color-from-palette(mat.$pink-palette, A200);
+$error-color: mat.get-color-from-palette(mat.$red-palette, 500);
+
+// Center the auth wrapper on the page with a clean background
 .auth-wrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
-  // Ensure it takes up the available vertical space, minus the header and global padding.
-  min-height: calc(100vh - var(--header-height) - (2 * var(--content-padding)));
-  padding: 2rem;
-}
+  align-items: center;
+  min-height: 100vh;
 
-// Styling for the Material Card container.
-mat-card {
-  width: 100%;
-  max-width: 420px;
-  padding: 2.5rem; // Generous padding for a clean look.
-  // The global styles in styles.scss already provide the base dark theme.
-  // This ensures consistency.
-}
+  padding: 20px;
 
-// The main "Вход" title.
-h2 {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: var(--color-text-primary);
-}
+  // Styling the material card
+  mat-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); // Soft shadow for depth
+    background: #ffffff;
 
-// Spacing for the form fields.
-.mat-form-field {
-  margin-bottom: 1rem;
-}
+    // Center the card title
+    h2 {
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: mat.get-color-from-palette(mat.$grey-palette, 900);
+      margin-bottom: 24px;
+    }
 
-// The main submit button.
-button[type="submit"] {
-  margin-top: 1.5rem;
-  width: 100%;
-  padding: 0.8rem 0;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  height: 50px; // Fixed height for a robust feel.
-  transition: all 0.3s ease;
+    // Style the form
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px; // Consistent spacing between form elements
 
-  // Style the disabled state to be clear to the user.
-  &[disabled] {
-    background-color: var(--color-text-secondary);
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-}
+      // Full-width form fields
+      .full-width {
+        width: 100%;
 
-// Container for the secondary action links (Register, Forgot Password).
-.actions {
-  display: flex;
-  justify-content: space-between; // Places links on opposite ends.
-  margin-top: 2rem;
-  padding: 0 0.25rem; // Slight padding for alignment.
+        // Style input fields
+        mat-form-field {
+          // Customize input appearance
+          ::ng-deep .mat-form-field-wrapper {
+            padding-bottom: 1.5em; // Ensure space for error messages
+          }
 
-  a {
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: color 0.3s ease;
+          // Style input labels
+          ::ng-deep .mat-form-field-label {
+            color: mat.get-color-from-palette(mat.$grey-palette, 700);
+            font-weight: 500;
+          }
 
-    &:hover {
-      color: var(--color-primary-accent);
-      text-decoration: underline;
+          // Style input text
+          input {
+            font-size: 1rem;
+            color: mat.get-color-from-palette(mat.$grey-palette, 900);
+          }
+
+          // Error message styling
+          mat-error {
+            font-size: 0.85rem;
+            color: $error-color;
+            margin-top: 4px;
+          }
+        }
+      }
+
+      // Style the submit button
+      button {
+        padding: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        background: $primary-color;
+        color: #ffffff;
+        border-radius: 8px;
+        transition: background 0.3s ease, transform 0.2s ease;
+
+        // Hover and active states
+        &:hover:not(:disabled) {
+          background: mat.get-color-from-palette(mat.$indigo-palette, 700);
+          transform: translateY(-2px); // Subtle lift effect
+        }
+
+        // Disabled state
+        &[disabled] {
+          background: mat.get-color-from-palette(mat.$grey-palette, 400);
+          cursor: not-allowed;
+        }
+      }
+
+      // Style the actions (links)
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 16px;
+
+        a {
+          font-size: 0.9rem;
+          color: $primary-color;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: mat.get-color-from-palette(mat.$indigo-palette, 700);
+            text-decoration: underline;
+          }
+        }
+      }
     }
   }
 }
 
-// Responsive adjustments for smaller screens.
-@media (max-width: 480px) {
+// Responsive design for smaller screens
+@media (max-width: 600px) {
   .auth-wrapper {
-    padding: 1rem;
-  }
+    padding: 16px;
 
-  mat-card {
-    padding: 2rem 1.5rem;
-  }
+    mat-card {
+      padding: 24px;
+      max-width: 90vw;
 
-  h2 {
-    font-size: 1.75rem;
-  }
+      h2 {
+        font-size: 1.5rem;
+      }
 
-  // Stack the action links vertically on very small screens.
-  .actions {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+      form {
+        gap: 12px;
+
+        button {
+          padding: 10px;
+          font-size: 0.9rem;
+        }
+
+        .actions {
+          flex-direction: column;
+          gap: 8px;
+          text-align: center;
+        }
+      }
+    }
   }
 }
